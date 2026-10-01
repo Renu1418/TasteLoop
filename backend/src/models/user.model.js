@@ -14,7 +14,14 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    role:{
+        type:String,
+        enum: ["client", "foodpartner"],
+        required:true,
+        default: "client"
     }
+
 },{timestamps:true});
 
 const userModel = mongoose.model('User',userSchema);

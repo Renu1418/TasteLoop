@@ -1,4 +1,5 @@
 const userModel = require('../models/user.model')
+const foodModel = require('../models/food.model')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -7,7 +8,7 @@ const jwt = require('jsonwebtoken')
  const registerUser = async (req,res)=>{
    try{
      
-    const{fullname,email,password} = req.body;
+    const{fullname,email,password,role} = req.body;
 
     const isUserExists = await userModel.findOne({email});
     
@@ -27,7 +28,8 @@ const jwt = require('jsonwebtoken')
     });
 
     const token = jwt.sign({
-        id:user._id
+        id:user._id,
+        role:user.role
     },process.env.JWT_SECRET,{expiresIn:'7d'});
     
     res.cookie('token', token);
@@ -38,7 +40,8 @@ const jwt = require('jsonwebtoken')
         user:{
             id:user._id,
             fullname:user.fullname,
-            email:user.email
+            email:user.email,
+            role:user.role
         }
     });
 
@@ -73,7 +76,8 @@ const loginUser = async (req,res)=>{
 
 
     const token = jwt.sign({
-        id:user._id
+        id:user._id,
+        role:user.role
     },process.env.JWT_SECRET, {expiresIn:'7d'});
 
     res.cookie('token',token);
@@ -84,10 +88,19 @@ const loginUser = async (req,res)=>{
         user:{
             id:user._id,
             fullname:user.fullname,
-            email:user.email
+            email:user.email,
+            role:user.role
         }
     });
        
 }
 
-module.exports = {registerUser, loginUser};
+//logout User
+const logoutUser = async (req,res)=>{
+      res.clearCookie('token');
+      return res.status(200).json({
+        success:true,
+        message:'User logged out successfully'
+      })
+}
+module.exports = {registerUser, loginUser, logoutUser};
