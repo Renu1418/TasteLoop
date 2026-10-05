@@ -1,7 +1,7 @@
-const userModel = require('../models/user.model')
-const foodModel = require('../models/food.model')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+import userModel from '../models/user.model.js'
+import foodModel from '../models/food.model.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 
 // register User
@@ -24,7 +24,8 @@ const jwt = require('jsonwebtoken')
     const user = await userModel.create({
         fullname,
         email,
-        password:hashedPassword
+        password:hashedPassword,
+        role:role || "client"
     });
 
     const token = jwt.sign({
@@ -103,4 +104,6 @@ const logoutUser = async (req,res)=>{
         message:'User logged out successfully'
       })
 }
-module.exports = {registerUser, loginUser, logoutUser};
+
+export {registerUser, loginUser, logoutUser};
+

@@ -1,5 +1,5 @@
-const userModel = require('../models/user.model');
-const jwt = require('jsonwebtoken')
+import userModel from '../models/user.model.js';
+import jwt from 'jsonwebtoken'
 
 // auth middleware to protect routes
 const authMiddleware = async (req,res,next)=>{
@@ -43,4 +43,5 @@ const authorize = (role) => {
 };
 
 
-module.exports = {authMiddleware, authorize};
+export {authMiddleware, authorize};
+
