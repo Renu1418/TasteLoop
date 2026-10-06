@@ -30,15 +30,10 @@ const userSchema = new mongoose.Schema({
     },
 
     role:{
-
         type:String,
-
         enum: ["client", "foodpartner"],
-
         required:true,
-
         default: "client"
-
     }
 
 },{timestamps:true});
