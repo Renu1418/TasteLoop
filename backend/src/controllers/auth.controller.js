@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken'
  const registerUser = async (req,res)=>{
    try{
      
-    const{fullname,email,password,role} = req.body;
+    const{fullname,email,password,phone,address,role} = req.body;
 
     const isUserExists = await userModel.findOne({email});
     
@@ -25,6 +25,8 @@ import jwt from 'jsonwebtoken'
         fullname,
         email,
         password:hashedPassword,
+        phone,
+        address,
         role:role || "client"
     });
 
@@ -42,6 +44,8 @@ import jwt from 'jsonwebtoken'
             id:user._id,
             fullname:user.fullname,
             email:user.email,
+            phone:user.phone,
+            address:user.address,
             role:user.role
         }
     });
@@ -90,6 +94,8 @@ const loginUser = async (req,res)=>{
             id:user._id,
             fullname:user.fullname,
             email:user.email,
+            phone:user.phone,
+            address:user.address,
             role:user.role
         }
     });
