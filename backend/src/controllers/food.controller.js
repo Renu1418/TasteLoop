@@ -34,4 +34,38 @@ const getFoodItems = async (req,res)=>{
     });
 }
 
-export { createFood, getFoodItems};
+
+// getfoodpartner By ID
+const getFoodPartnerById = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const foodPartner = await userModel.findById(id).select('-password')
+
+    if (!foodPartner) {
+      return res.status(404).json({
+        success: false,
+        message: 'Food partner not found'
+      })
+    }
+    //  to find food items of the food partner
+    const foodItems = await foodModel.find({foodPartner: id})
+
+    return res.status(200).json({
+      success: true,
+      message: 'Food partner fetched successfully',
+      foodPartner,
+      foodItems
+    })
+
+  } catch (err) {
+    console.error('Error fetching food partner:', err)
+
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    })
+  }
+}
+
+export { createFood, getFoodItems,getFoodPartnerById };

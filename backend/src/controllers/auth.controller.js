@@ -1,5 +1,4 @@
 import userModel from '../models/user.model.js'
-import foodModel from '../models/food.model.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -8,7 +7,7 @@ import jwt from 'jsonwebtoken'
  const registerUser = async (req,res)=>{
    try{
      
-    const{fullname,email,password,phone,address,role} = req.body;
+    const{businessName,fullname,email,password,phone,address,role} = req.body;
 
     const isUserExists = await userModel.findOne({email});
     
@@ -22,6 +21,7 @@ import jwt from 'jsonwebtoken'
     const hashedPassword = await bcrypt.hash(password,10);
 
     const user = await userModel.create({
+        businessName,
         fullname,
         email,
         password:hashedPassword,
@@ -42,6 +42,7 @@ import jwt from 'jsonwebtoken'
         message:"User registered successfully",
         user:{
             id:user._id,
+            businessName:user.businessName,
             fullname:user.fullname,
             email:user.email,
             phone:user.phone,
@@ -92,6 +93,7 @@ const loginUser = async (req,res)=>{
         message:'User logged in successfully',
         user:{
             id:user._id,
+            businessName:user.businessName,
             fullname:user.fullname,
             email:user.email,
             phone:user.phone,

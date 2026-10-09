@@ -3,18 +3,18 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
 
+    businessName: {
+        type: String
+    },
     fullname:{
         type:String,
         required:true
     },
     phone:{
-        type:String,
-        required:true,
-
+        type:String
     },
     address:{
-        type:String,
-        required:true
+        type:String
     },
     email:{
         type:String,
