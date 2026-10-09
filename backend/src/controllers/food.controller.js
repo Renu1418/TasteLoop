@@ -2,7 +2,8 @@ import foodModel from '../models/food.model.js'
 import userModel from '../models/user.model.js'
 import { uploadFile } from '../services/storage.service.js'
 import {v4 as uuid} from 'uuid'
-
+import likeModel from '../models/likes.model.js'
+import saveModel from '../models/save.model.js'
 
 
 const createFood = async (req,res)=>{
@@ -68,4 +69,123 @@ const getFoodPartnerById = async (req, res) => {
   }
 }
 
-export { createFood, getFoodItems,getFoodPartnerById };
+// like food
+const likeFood = async (req, res)=>{
+  const {foodId} = req.body;
+  const user = req.user;
+
+  const isLiked = await likeModel.findOne({user:user._id, food:foodId});
+
+  if(isLiked){
+      await likeModel.findOneAndDelete({
+      user:user._id,
+      food:foodId
+    });
+
+    await foodModel.findByIdAndUpdate(foodId,{ $inc: {likeCount:-1} });
+
+    return res.status(200).json({
+      message:"Food unliked successfully"
+    });
+  }
+
+    const like = await likeModel.create({
+      user:user._id,
+      food:foodId
+    });
+  
+    await foodModel.findByIdAndUpdate(foodId, { $inc: { likeCount: 1 } });
+    
+    return res.status(201).json({
+      success:true,
+      message:'Food item liked successfully',
+      like
+    });
+
+  }
+ 
+
+// save food
+const saveFood = async (req, res) => {
+  const { foodId } = req.body
+  const user = req.user
+
+  const isSaved = await saveModel.findOne({
+    user: user._id,
+    food: foodId
+  })
+
+  if (isSaved) {
+    await saveModel.findOneAndDelete({
+      user: user._id,
+      food: foodId
+    })
+
+    await foodModel.findByIdAndUpdate(foodId,{ $inc: {saveCount:-1} });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Food unsaved successfully'
+    })
+  }
+
+  const savedFood = await saveModel.create({
+    user: user._id,
+    food: foodId
+  });
+
+  await foodModel.findByIdAndUpdate(foodId,{ $inc: {saveCount:1} });
+
+  return res.status(201).json({
+    success: true,
+    message: 'Food saved successfully',
+    savedFood
+  })
+}
+
+
+
+// get liked food items
+const getMyLikes = async (req, res) => {
+  try {
+    const likes = await likeModel.find({
+      user: req.user._id
+    }).select('food -_id')
+
+    return res.status(200).json({
+      success: true,
+      likedFoods: likes.map((item) => item.food.toString())
+    })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch liked foods'
+    })
+  }
+}
+
+
+
+// get saved reels
+const getMySaves = async (req, res) => {
+  try {
+    const saves = await saveModel.find({
+      user: req.user._id
+    }).select('food -_id')
+
+    return res.status(200).json({
+      success: true,
+      savedFoods: saves.map((item) => item.food.toString())
+    })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch saved foods'
+    })
+  }
+}
+
+
+export { createFood, getFoodItems, getFoodPartnerById, likeFood, saveFood, getMyLikes, getMySaves  }
