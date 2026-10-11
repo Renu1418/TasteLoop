@@ -1,20 +1,57 @@
-
 import React from 'react'
 import { Link } from 'react-router-dom'
 
 const FoodReel = ({
   food,
-  isLiked,
-  isSaved,
-  likeLoading,
-  saveLoading,
+  isLiked = false,
+  isSaved = false,
+  likeLoading = false,
+  saveLoading = false,
   onLike,
   onSave,
-  onComment
+  onComment,
+  variant = 'reel',
+  onOpen,
 }) => {
+  // Compact food card for the partner profile grid
+  if (variant === 'grid') {
+    return (
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label={`Watch ${food.name || 'food reel'}`}
+        className="group relative aspect-[3/4] min-w-0 overflow-hidden rounded-lg border border-white/[0.08] bg-zinc-900 text-left transition duration-300 hover:border-orange-500/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-orange-400 sm:rounded-xl"
+      >
+        <video
+          src={food.video}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/5 to-transparent" />
+
+        <div className="absolute bottom-0 left-0 right-0 p-1.5 sm:p-3">
+          <p className="truncate text-[11px] font-bold text-white sm:text-sm">
+            {food.name || 'Food reel'}
+          </p>
+
+          <div className="mt-1.5 flex items-center gap-1 text-[9px] font-medium text-white/75 sm:text-[11px]">
+            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/15 text-[8px] sm:h-5 sm:w-5 sm:text-[10px]">
+              ▶
+            </span>
+            Watch reel
+          </div>
+        </div>
+      </button>
+    )
+  }
+
+  // Full-screen reel layout used in the feed and viewer
   return (
     <article className="relative h-full w-full shrink-0 snap-start snap-always overflow-hidden bg-zinc-900 sm:rounded-2xl">
-      {/* Video */}
       <video
         src={food.video}
         autoPlay
@@ -25,10 +62,8 @@ const FoodReel = ({
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* Gradient */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
 
-      {/* Food details */}
       <div className="absolute bottom-0 left-0 z-10 w-[78%] p-4 pb-6 text-white sm:p-6 sm:pb-7">
         <h2 className="mb-2 text-lg font-bold drop-shadow-lg sm:text-xl">
           {food.name}
@@ -39,19 +74,18 @@ const FoodReel = ({
         </p>
 
         <Link
-          to={`/food-partner/${food.foodPartner}`}
+          to={`/food-partner/${food.foodPartner?._id || food.foodPartner}`}
           className="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/15 px-5 py-2.5 text-sm font-semibold text-white shadow-lg backdrop-blur-md transition hover:bg-white hover:text-black"
         >
           Visit Store <span>↗</span>
         </Link>
       </div>
 
-      {/* Instagram-style action buttons */}
       <div className="absolute bottom-24 right-2 z-10 flex flex-col items-center gap-4 sm:bottom-28 sm:right-4 sm:gap-6">
         {/* Like */}
         <button
           type="button"
-          onClick={() => onLike(food)}
+          onClick={() => onLike?.(food)}
           disabled={likeLoading}
           aria-label={isLiked ? 'Unlike food' : 'Like food'}
           aria-pressed={isLiked}
@@ -82,7 +116,7 @@ const FoodReel = ({
         {/* Save */}
         <button
           type="button"
-          onClick={() => onSave(food._id)}
+          onClick={() => onSave?.(food._id)}
           disabled={saveLoading}
           aria-label={isSaved ? 'Unsave food' : 'Save food'}
           aria-pressed={isSaved}
@@ -107,10 +141,10 @@ const FoodReel = ({
           </span>
         </button>
 
-        {/* Comment */}
+        {/* Comments */}
         <button
           type="button"
-          onClick={() => onComment(food)}
+          onClick={() => onComment?.(food)}
           aria-label="Comments"
           className="group flex flex-col items-center gap-1 text-white"
         >
