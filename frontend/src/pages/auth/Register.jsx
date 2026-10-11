@@ -1,18 +1,18 @@
+
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useAuth } from '../../context/AuthContext'
 
 const Register = () => {
-
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [role, setRole] = useState('client')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Client registration
     if (role === 'client') {
-
       const fullname = e.target.fullname.value
       const email = e.target.email.value
       const password = e.target.password.value
@@ -32,17 +32,18 @@ const Register = () => {
         )
 
         console.log(response.data)
+
+        // Update authentication state
+        login(response.data.user)
+
         navigate('/')
 
       } catch (err) {
         console.log(err.response?.data || err)
       }
-
     }
 
-    // Food Partner registration
     else if (role === 'foodpartner') {
-
       const businessName = e.target.businessName.value
       const fullname = e.target.fullname.value
       const phone = e.target.phone.value
@@ -68,6 +69,10 @@ const Register = () => {
         )
 
         console.log(response.data)
+
+        // Update authentication state
+        login(response.data.user)
+
         navigate('/create-food')
 
       } catch (err) {
@@ -78,10 +83,8 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center px-4 py-5">
-
       <div className="w-full max-w-md">
 
-        {/* Header */}
         <div className="text-center mb-5">
           <h1 className="text-2xl font-semibold tracking-tight">
             Create your account
@@ -92,20 +95,15 @@ const Register = () => {
           </p>
         </div>
 
-        {/* Register Card */}
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6 shadow-sm">
-
           <form onSubmit={handleSubmit} className="space-y-3.5">
 
-            {/* Role */}
             <div>
               <label className="mb-1.5 block text-sm font-medium">
                 Register as
               </label>
 
               <div className="grid grid-cols-2 gap-3">
-
-                {/* Client */}
                 <label className="cursor-pointer">
                   <input
                     type="radio"
@@ -121,7 +119,6 @@ const Register = () => {
                   </div>
                 </label>
 
-                {/* Food Partner */}
                 <label className="cursor-pointer">
                   <input
                     type="radio"
@@ -136,17 +133,12 @@ const Register = () => {
                     Food Partner
                   </div>
                 </label>
-
               </div>
             </div>
 
-            {/* Business Name - Food Partner */}
             {role === 'foodpartner' && (
               <div>
-                <label
-                  htmlFor="businessName"
-                  className="mb-1.5 block text-sm font-medium"
-                >
+                <label htmlFor="businessName" className="mb-1.5 block text-sm font-medium">
                   Business Name
                 </label>
 
@@ -161,12 +153,8 @@ const Register = () => {
               </div>
             )}
 
-            {/* Full Name */}
             <div>
-              <label
-                htmlFor="fullname"
-                className="mb-1.5 block text-sm font-medium"
-              >
+              <label htmlFor="fullname" className="mb-1.5 block text-sm font-medium">
                 Full Name
               </label>
 
@@ -180,13 +168,9 @@ const Register = () => {
               />
             </div>
 
-            {/* Phone - Food Partner only */}
             {role === 'foodpartner' && (
               <div>
-                <label
-                  htmlFor="phone"
-                  className="mb-1.5 block text-sm font-medium"
-                >
+                <label htmlFor="phone" className="mb-1.5 block text-sm font-medium">
                   Phone Number
                 </label>
 
@@ -201,12 +185,8 @@ const Register = () => {
               </div>
             )}
 
-            {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="mb-1.5 block text-sm font-medium"
-              >
+              <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
                 Email
               </label>
 
@@ -220,13 +200,9 @@ const Register = () => {
               />
             </div>
 
-            {/* Address - Food Partner only */}
             {role === 'foodpartner' && (
               <div>
-                <label
-                  htmlFor="address"
-                  className="mb-1.5 block text-sm font-medium"
-                >
+                <label htmlFor="address" className="mb-1.5 block text-sm font-medium">
                   Address
                 </label>
 
@@ -241,12 +217,8 @@ const Register = () => {
               </div>
             )}
 
-            {/* Password */}
             <div>
-              <label
-                htmlFor="password"
-                className="mb-1.5 block text-sm font-medium"
-              >
+              <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
                 Password
               </label>
 
@@ -260,7 +232,6 @@ const Register = () => {
               />
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-medium text-[var(--primary-foreground)] transition hover:opacity-90"
@@ -270,10 +241,8 @@ const Register = () => {
 
           </form>
 
-          {/* Login Link */}
           <p className="mt-4 text-center text-sm opacity-70">
             Already have an account?{' '}
-
             <Link
               to="/login"
               className="font-medium text-[var(--foreground)] underline underline-offset-4 hover:opacity-70"
@@ -281,10 +250,8 @@ const Register = () => {
               Login
             </Link>
           </p>
-
         </div>
       </div>
-
     </div>
   )
 }

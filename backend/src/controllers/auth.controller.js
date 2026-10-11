@@ -113,5 +113,24 @@ const logoutUser = async (req,res)=>{
       })
 }
 
-export {registerUser, loginUser, logoutUser};
+
+
+// get current user 
+
+const getCurrentUser = async (req, res) => {
+  return res.status(200).json({
+    success: true,
+    user: {
+      id: req.user._id,
+      businessName: req.user.businessName,
+      fullname: req.user.fullname,
+      email: req.user.email,
+      phone: req.user.phone,
+      address: req.user.address,
+      role: req.user.role
+    }
+  })
+}
+
+export {registerUser, loginUser, logoutUser, getCurrentUser};
 

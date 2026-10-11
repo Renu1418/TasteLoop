@@ -1,10 +1,12 @@
+
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { useAuth } from '../../context/AuthContext'
 
 const Login = () => {
-
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,8 +25,11 @@ const Login = () => {
           withCredentials: true
         }
       )
-  
+
       console.log(response.data)
+
+      // Update the logged-in user's state
+      login(response.data.user)
 
       const role = response.data.user.role
 
