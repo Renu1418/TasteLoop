@@ -4,15 +4,14 @@ import { useAuth } from '../context/AuthContext'
 
 const ClientSidebar = () => {
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
-
-  const userId = user?._id || user?.id
+  const { logout } = useAuth()
 
   const links = [
     { name: 'Home', path: '/dashboard' },
     { name: 'Reels', path: '/reels' },
     { name: 'Saved Reels', path: '/saved' },
     { name: 'Liked Reels', path: '/liked' },
+    { name: 'My Profile', path: '/client-profile' },
   ]
 
   const handleLogout = async () => {

@@ -30,7 +30,7 @@ const Dashboard = () => {
     <div className="min-h-screen bg-[#0b0b0b] text-white">
 
       {/* Header */}
-      <header className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-5 sm:px-8 lg:px-10">
+      <header className="flex items-center gap-3 border-b border-white/10 px-5 py-5 sm:px-8 lg:px-10">
         <div>
           <p className="text-xs text-zinc-400 sm:text-sm">
             DISCOVER SOMETHING DELICIOUS
@@ -40,16 +40,6 @@ const Dashboard = () => {
             Hey, {user?.fullname?.split(' ')[0] || 'Foodie'}!
           </h1>
         </div>
-
-        {/* Clickable Profile Avatar */}
-        <Link
-          to="/client-profile"
-          aria-label="Open profile"
-          title="View Profile"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-orange-500/40 bg-orange-500/10 text-lg font-bold text-orange-400 transition hover:border-orange-400 hover:bg-orange-500/20 focus:outline-none focus:ring-2 focus:ring-orange-500"
-        >
-          {(user?.fullname || 'U').charAt(0).toUpperCase()}
-        </Link>
       </header>
 
       <main className="mx-auto max-w-[1500px] space-y-10 px-4 py-6 sm:space-y-12 sm:px-8 sm:py-8 lg:px-10">
