@@ -1,6 +1,6 @@
 import express from 'express';
 import upload from '../middlewares/upload.middleware.js'
-import { createFood, getFoodItems, getFoodPartnerById, likeFood , saveFood, getMyLikes, getMySaves} from '../controllers/food.controller.js'
+import { createFood, getFoodItems, getFoodPartnerById, likeFood , saveFood, getMyLikes, getMySaves, deleteFood} from '../controllers/food.controller.js'
 import {authMiddleware,authorize} from '../middlewares/auth.middleware.js';
 
 
@@ -19,6 +19,7 @@ foodRouter.post('/save', authMiddleware,authorize('client'), saveFood);
 
 foodRouter.get('/my-likes', authMiddleware, authorize('client'), getMyLikes);
 foodRouter.get('/my-saves', authMiddleware, authorize('client'), getMySaves);
+foodRouter.delete('/:id',authMiddleware,authorize('foodpartner'),deleteFood);
 
 export default foodRouter;
 

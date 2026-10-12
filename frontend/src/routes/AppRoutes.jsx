@@ -20,6 +20,7 @@ import CreateFood from '../pages/food-partner/CreateFood'
 import Profile from '../pages/food-partner/Profile'
 
 import DashboardLayout from '../components/DashboardLayout'
+import FoodPartnerLayout from '../components/FoodPartnerLayout'
 
 const AppRoutes = () => {
   const { user, loading } = useAuth()
@@ -41,7 +42,6 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        {/* Login */}
         <Route
           path="/login"
           element={
@@ -51,7 +51,6 @@ const AppRoutes = () => {
           }
         />
 
-        {/* Register */}
         <Route
           path="/register"
           element={
@@ -61,7 +60,7 @@ const AppRoutes = () => {
           }
         />
 
-        {/* Client Dashboard Layout */}
+        {/* CLIENT PAGES */}
         <Route
           path="/"
           element={
@@ -69,51 +68,24 @@ const AppRoutes = () => {
               ? <Navigate to="/login" replace />
               : user.role === 'client'
                 ? <DashboardLayout />
-                : <Navigate to="/create-food" replace />
+                : user.role === 'foodpartner'
+                  ? <FoodPartnerLayout />
+                  : <Navigate to="/login" replace />
           }
         >
-          {/* Default client page */}
+          {/* Client routes */}
           <Route index element={<Dashboard />} />
-
-          {/* Existing reels page */}
           <Route path="reels" element={<Home />} />
-
-          {/* Saved and liked reels */}
           <Route path="saved" element={<Saved />} />
           <Route path="liked" element={<Liked />} />
+          <Route path="client-profile" element={<ClientProfile />} />
 
-          {/* Client account profile */}
-          <Route
-            path="client-profile"
-            element={<ClientProfile />}
-          />
+          {/* Food Partner routes */}
+          <Route path="create-food" element={<CreateFood />} />
+          <Route path="food-partner/:id" element={<Profile />} />
         </Route>
 
-        {/* Food Partner Dashboard */}
-        <Route
-          path="/create-food"
-          element={
-            !user
-              ? <Navigate to="/login" replace />
-              : user.role === 'foodpartner'
-                ? <CreateFood />
-                : <Navigate to="/" replace />
-          }
-        />
-
-        {/* Public food partner store page */}
-        <Route
-          path="/food-partner/:id"
-          element={
-            !user
-              ? <Navigate to="/login" replace />
-              : user.role === 'client'
-                ? <Profile />
-                : <Navigate to="/create-food" replace />
-          }
-        />
-
-        {/* Unknown routes */}
+        {/* FALLBACK */}
         <Route
           path="*"
           element={<Navigate to={getHomeRoute()} replace />}

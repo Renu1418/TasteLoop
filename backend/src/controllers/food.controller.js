@@ -187,5 +187,45 @@ const getMySaves = async (req, res) => {
   }
 }
 
+// delete reels - [protected-food-partner]
+const deleteFood = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-export { createFood, getFoodItems, getFoodPartnerById, likeFood, saveFood, getMyLikes, getMySaves  }
+    const food = await foodModel.findById(id);
+
+    if (!food) {
+      return res.status(404).json({
+        success: false,
+        message: 'Food reel not found'
+      });
+    }
+
+    // Check whether this reel belongs to the logged-in Food Partner
+    if (food.foodPartner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only delete your own food reels'
+      });
+    }
+
+    // Delete related likes and saves first
+    await likeModel.deleteMany({ food: food._id });
+    await saveModel.deleteMany({ food: food._id });
+
+    await foodModel.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Food reel deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete food error:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to delete food reel'
+    });
+  }
+};
+export { createFood, getFoodItems, getFoodPartnerById, likeFood, saveFood, getMyLikes, getMySaves,deleteFood }
