@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import FoodReel from './FoodReel'
 
-const API = 'http://localhost:3000/api/food'
+import React, { useEffect, useState } from 'react'
+import api from '../services/api'
+import FoodReel from './FoodReel'
 
 const FoodCollection = ({ type }) => {
     const [foodVideos, setFoodVideos] = useState([])
@@ -40,9 +39,9 @@ const FoodCollection = ({ type }) => {
 
                 const [foodResponse, likesResponse, savesResponse] =
                     await Promise.all([
-                        axios.get(`${API}/`, { withCredentials: true }),
-                        axios.get(`${API}/my-likes`, { withCredentials: true }),
-                        axios.get(`${API}/my-saves`, { withCredentials: true }),
+                        api.get('/api/food/'),
+                        api.get('/api/food/my-likes'),
+                        api.get('/api/food/my-saves'),
                     ])
 
                 setFoodVideos(foodResponse.data.foodItems || [])
@@ -79,11 +78,7 @@ const FoodCollection = ({ type }) => {
                 [actionKey]: true,
             }))
 
-            await axios.post(
-                `${API}/like`,
-                { foodId },
-                { withCredentials: true }
-            )
+            await api.post('/api/food/like', { foodId })
 
             setLikedFoods((prev) =>
                 wasLiked
@@ -131,11 +126,7 @@ const FoodCollection = ({ type }) => {
                 [actionKey]: true,
             }))
 
-            await axios.post(
-                `${API}/save`,
-                { foodId },
-                { withCredentials: true }
-            )
+            await api.post('/api/food/save', { foodId })
 
             setSavedFoods((prev) =>
                 wasSaved
@@ -173,10 +164,8 @@ const FoodCollection = ({ type }) => {
 
     return (
         <div className="flex h-[100dvh] w-full items-center justify-center overflow-hidden bg-black px-3 py-3 text-white sm:px-5 sm:py-4">
-            {/* Reels frame: spacing without a visible border */}
             <main className="relative flex h-full w-full max-w-[460px] flex-col overflow-hidden rounded-2xl bg-black sm:rounded-3xl">
 
-                {/* Header */}
                 <header className="z-20 flex shrink-0 items-center justify-between border-b border-white/10 bg-black px-4 py-4">
                     <h1 className="text-xl font-bold text-zinc-200">
                         {title}
@@ -187,7 +176,6 @@ const FoodCollection = ({ type }) => {
                     </span>
                 </header>
 
-                {/* Error state */}
                 {error ? (
                     <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
                         <p className="text-red-400">{error}</p>
@@ -200,7 +188,6 @@ const FoodCollection = ({ type }) => {
                         </button>
                     </div>
                 ) : visibleFoods.length === 0 ? (
-                    /* Empty state */
                     <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
                         <p className="mb-2 text-lg font-semibold">
                             {type === 'liked'
@@ -214,7 +201,6 @@ const FoodCollection = ({ type }) => {
                         </p>
                     </div>
                 ) : (
-                    /* Reels: scrolling works, scrollbar stays hidden */
                     <div className="min-h-0 flex-1 snap-y snap-mandatory overflow-x-hidden overflow-y-auto overscroll-y-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         {visibleFoods.map((food) => (
                             <div
@@ -238,7 +224,6 @@ const FoodCollection = ({ type }) => {
                     </div>
                 )}
 
-                {/* Notification */}
                 {notice && (
                     <div
                         role="status"

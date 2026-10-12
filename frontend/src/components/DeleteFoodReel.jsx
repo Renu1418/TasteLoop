@@ -1,8 +1,6 @@
 
 import { useState } from 'react'
-import axios from 'axios'
-
-const API = 'http://localhost:3000/api/food'
+import api from '../services/api'
 
 const DeleteFoodReel = ({ foodId, onDeleted, compact = false }) => {
   const [loading, setLoading] = useState(false)
@@ -17,9 +15,7 @@ const DeleteFoodReel = ({ foodId, onDeleted, compact = false }) => {
     try {
       setLoading(true)
 
-      const response = await axios.delete(`${API}/${foodId}`, {
-        withCredentials: true
-      })
+      const response = await api.delete(`/api/food/${foodId}`)
 
       if (response.data.success) {
         onDeleted(foodId)

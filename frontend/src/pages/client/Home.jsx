@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import FoodReel from '../../components/FoodReel'
 
-const API = 'http://localhost:3000/api/food'
+import React, { useEffect, useState } from 'react'
+import api from '../../services/api'
+import FoodReel from '../../components/FoodReel'
 
 const Home = () => {
   const [foodVideos, setFoodVideos] = useState([])
@@ -15,9 +14,7 @@ const Home = () => {
   useEffect(() => {
     const fetchFoodItems = async () => {
       try {
-        const response = await axios.get(`${API}/`, {
-          withCredentials: true
-        })
+        const response = await api.get('/api/food/')
 
         setFoodVideos(response.data.foodItems || [])
       } catch (err) {
@@ -32,13 +29,9 @@ const Home = () => {
   useEffect(() => {
     const fetchUserActions = async () => {
       try {
-        const likesResponse = await axios.get(`${API}/my-likes`, {
-          withCredentials: true
-        })
+        const likesResponse = await api.get('/api/food/my-likes')
 
-        const savesResponse = await axios.get(`${API}/my-saves`, {
-          withCredentials: true
-        })
+        const savesResponse = await api.get('/api/food/my-saves')
 
         setLikedFoods(likesResponse.data.likedFoods || [])
         setSavedFoods(savesResponse.data.savedFoods || [])
@@ -71,11 +64,7 @@ const Home = () => {
     }))
 
     try {
-      await axios.post(
-        `${API}/like`,
-        { foodId },
-        { withCredentials: true }
-      )
+      await api.post('/api/food/like', { foodId })
 
       setLikedFoods((prev) =>
         wasLiked
@@ -121,11 +110,7 @@ const Home = () => {
     }))
 
     try {
-      await axios.post(
-        `${API}/save`,
-        { foodId },
-        { withCredentials: true }
-      )
+      await api.post('/api/food/save', { foodId })
 
       setSavedFoods((prev) =>
         wasSaved
@@ -157,9 +142,8 @@ const Home = () => {
 
         {/* Header */}
         <header className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pb-8 pt-4 sm:px-5">
-
           <span className="ml-auto text-right text-xs font-medium text-white/80">
-           Discover food
+            Discover food
           </span>
         </header>
 

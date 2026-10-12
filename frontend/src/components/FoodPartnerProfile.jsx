@@ -1,10 +1,9 @@
+
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import FoodReel from './FoodReel'
-
-const API = 'http://localhost:3000/api/food'
 
 const FoodPartnerProfile = () => {
   const { id } = useParams()
@@ -39,9 +38,8 @@ const FoodPartnerProfile = () => {
       setError('')
 
       try {
-        const profileRes = await axios.get(
-          `${API}/food-partner/${id}`,
-          { withCredentials: true }
+        const profileRes = await api.get(
+          `/api/food/food-partner/${id}`
         )
 
         if (!active) return
@@ -52,12 +50,8 @@ const FoodPartnerProfile = () => {
         if (isClient) {
           try {
             const [likesRes, savesRes] = await Promise.all([
-              axios.get(`${API}/my-likes`, {
-                withCredentials: true,
-              }),
-              axios.get(`${API}/my-saves`, {
-                withCredentials: true,
-              }),
+              api.get('/api/food/my-likes'),
+              api.get('/api/food/my-saves'),
             ])
 
             if (!active) return
@@ -180,11 +174,7 @@ const FoodPartnerProfile = () => {
     setActions((prev) => ({ ...prev, [key]: true }))
 
     try {
-      await axios.post(
-        `${API}/like`,
-        { foodId },
-        { withCredentials: true }
-      )
+      await api.post('/api/food/like', { foodId })
 
       setLikedFoods((prev) =>
         wasLiked
@@ -229,11 +219,7 @@ const FoodPartnerProfile = () => {
     setActions((prev) => ({ ...prev, [key]: true }))
 
     try {
-      await axios.post(
-        `${API}/save`,
-        { foodId },
-        { withCredentials: true }
-      )
+      await api.post('/api/food/save', { foodId })
 
       setSavedFoods((prev) =>
         wasSaved
