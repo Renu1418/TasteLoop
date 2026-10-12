@@ -1,6 +1,5 @@
 import React from 'react'
 import { useAuth } from '../../context/AuthContext'
-import Logout from '../../components/Logout'
 
 const ClientProfile = () => {
   const { user } = useAuth()
@@ -54,10 +53,6 @@ const ClientProfile = () => {
                 </p>
               </div>
             ))}
-          </div>
-
-          <div className="mt-6 border-t border-white/10 pt-6">
-            <Logout />
           </div>
         </section>
       </div>
