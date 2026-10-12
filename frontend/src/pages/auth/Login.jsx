@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -17,110 +16,91 @@ const Login = () => {
     try {
       const response = await axios.post(
         'http://localhost:3000/api/auth/user/login',
-        {
-          email,
-          password
-        },
-        {
-          withCredentials: true
-        }
+        { email, password },
+        { withCredentials: true }
       )
 
-      console.log(response.data)
-
-      // Update the logged-in user's state
       login(response.data.user)
 
       const role = response.data.user.role
-
-      if (role === 'client') {
-        navigate('/')
-      } else if (role === 'foodpartner') {
-        navigate('/create-food')
-      }
-
+      if (role === 'client') navigate('/')
+      else if (role === 'foodpartner') navigate('/create-food')
     } catch (err) {
       console.log(err.response?.data || err)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center px-4 py-8">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 py-8 text-white">
+      <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-orange-500/10 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-20 right-0 h-72 w-72 rounded-full bg-orange-600/10 blur-[100px]" />
 
-      <div className="w-full max-w-md">
+      <Link to="/" className="absolute left-6 top-6 text-2xl font-extrabold">
+        Taste<span className="text-orange-500">Loop</span>
+      </Link>
 
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Welcome back
-          </h1>
-
-          <p className="mt-2 text-sm opacity-70">
-            Login to your TasteLoop account
-          </p>
+      <main className="relative w-full max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-7 shadow-2xl shadow-orange-950/10 sm:p-9">
+        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-2xl">
+          🍽️
         </div>
 
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-8 shadow-sm">
+        <h1 className="text-3xl font-bold">Welcome back!</h1>
+        <p className="mt-2 text-sm leading-6 text-zinc-400">
+          Login to discover delicious food reels.
+        </p>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="mt-7 space-y-5">
+          <div>
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-zinc-300">
+              Email address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              required
+              className="w-full rounded-xl border border-white/10 bg-zinc-900 px-4 py-3.5 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+            />
+          </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium"
-              >
-                Email
-              </label>
+          <div>
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-zinc-300">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              required
+              className="w-full rounded-xl border border-white/10 bg-zinc-900 px-4 py-3.5 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+            />
+          </div>
 
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                required
-                className="w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-3 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
-              />
-            </div>
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-orange-500 py-3.5 font-semibold transition hover:bg-orange-600 active:scale-[0.99]"
+          >
+            Login to TasteLoop →
+          </button>
+        </form>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-medium"
-              >
-                Password
-              </label>
-
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                required
-                className="w-full rounded-lg border border-[var(--border)] bg-transparent px-4 py-3 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-[var(--primary)] px-4 py-3 text-sm font-medium text-[var(--primary-foreground)] transition hover:opacity-90"
-            >
-              Login
-            </button>
-
-          </form>
-
-          <p className="mt-6 text-center text-sm opacity-70">
-            Don't have an account?{' '}
-            <Link
-              to="/register"
-              className="font-medium text-[var(--foreground)] underline underline-offset-4 hover:opacity-70"
-            >
-              Register
-            </Link>
-          </p>
-
+        <div className="my-6 flex items-center gap-3">
+          <div className="h-px flex-1 bg-white/10" />
+          <span className="text-xs text-zinc-500">NEW TO TASTELOOP?</span>
+          <div className="h-px flex-1 bg-white/10" />
         </div>
-      </div>
 
+        <p className="text-center text-sm text-zinc-400">
+          Don't have an account?{' '}
+          <Link to="/register" className="font-semibold text-orange-500 hover:text-orange-400">
+            Sign up
+          </Link>
+        </p>
+      </main>
     </div>
   )
 }

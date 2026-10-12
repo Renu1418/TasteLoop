@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -12,246 +11,191 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (role === 'client') {
-      const fullname = e.target.fullname.value
-      const email = e.target.email.value
-      const password = e.target.password.value
+    const fullname = e.target.fullname.value
+    const email = e.target.email.value
+    const password = e.target.password.value
 
-      try {
-        const response = await axios.post(
-          'http://localhost:3000/api/auth/user/register',
-          {
-            fullname,
-            email,
-            password,
-            role
-          },
-          {
-            withCredentials: true
-          }
-        )
+    const userData = { fullname, email, password, role }
 
-        console.log(response.data)
-
-        // Update authentication state
-        login(response.data.user)
-
-        navigate('/')
-
-      } catch (err) {
-        console.log(err.response?.data || err)
-      }
+    if (role === 'foodpartner') {
+      userData.businessName = e.target.businessName.value
+      userData.phone = e.target.phone.value
+      userData.address = e.target.address.value
     }
 
-    else if (role === 'foodpartner') {
-      const businessName = e.target.businessName.value
-      const fullname = e.target.fullname.value
-      const phone = e.target.phone.value
-      const email = e.target.email.value
-      const address = e.target.address.value
-      const password = e.target.password.value
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/auth/user/register',
+        userData,
+        { withCredentials: true }
+      )
 
-      try {
-        const response = await axios.post(
-          'http://localhost:3000/api/auth/user/register',
-          {
-            businessName,
-            fullname,
-            phone,
-            email,
-            address,
-            password,
-            role
-          },
-          {
-            withCredentials: true
-          }
-        )
+      login(response.data.user)
 
-        console.log(response.data)
-
-        // Update authentication state
-        login(response.data.user)
-
-        navigate('/create-food')
-
-      } catch (err) {
-        console.log(err.response?.data || err)
-      }
+      if (role === 'client') navigate('/')
+      else navigate('/create-food')
+    } catch (err) {
+      console.log(err.response?.data || err)
     }
   }
 
+  const inputClass =
+    'w-full rounded-xl border border-white/10 bg-zinc-900 px-4 py-3 text-sm text-white outline-none transition placeholder:text-zinc-600 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20'
+
+  const labelClass = 'mb-1.5 block text-sm font-medium text-zinc-300'
+
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex items-center justify-center px-4 py-5">
-      <div className="w-full max-w-md">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 py-8 text-white">
+      <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-orange-500/10 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-20 right-0 h-72 w-72 rounded-full bg-orange-600/10 blur-[100px]" />
 
-        <div className="text-center mb-5">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Create your account
-          </h1>
+      <Link to="/" className="absolute left-6 top-6 text-2xl font-extrabold">
+        Taste<span className="text-orange-500">Loop</span>
+      </Link>
 
-          <p className="mt-1 text-sm opacity-70">
-            Join TasteLoop today
-          </p>
+      <main className="relative my-12 w-full max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-6 shadow-2xl shadow-orange-950/10 sm:p-8">
+        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-2xl">
+          🍽️
         </div>
 
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6 shadow-sm">
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+        <h1 className="text-3xl font-bold">Create account</h1>
+        <p className="mt-2 text-sm text-zinc-400">
+          Join TasteLoop and discover something delicious.
+        </p>
 
-            <div>
-              <label className="mb-1.5 block text-sm font-medium">
-                Register as
-              </label>
-
-              <div className="grid grid-cols-2 gap-3">
-                <label className="cursor-pointer">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div>
+            <label className={labelClass}>Register as</label>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { value: 'client', label: 'Client' },
+                { value: 'foodpartner', label: 'Food Partner' },
+              ].map((item) => (
+                <label key={item.value} className="cursor-pointer">
                   <input
                     type="radio"
                     name="role"
-                    value="client"
-                    checked={role === 'client'}
+                    value={item.value}
+                    checked={role === item.value}
                     onChange={(e) => setRole(e.target.value)}
                     className="peer sr-only"
                   />
-
-                  <div className="rounded-lg border border-[var(--border)] px-3 py-2.5 text-center text-sm transition peer-checked:border-[var(--primary)] peer-checked:bg-[var(--primary)] peer-checked:text-[var(--primary-foreground)]">
-                    Client
+                  <div className="rounded-xl border border-white/10 bg-zinc-900 px-3 py-3 text-center text-sm transition peer-checked:border-orange-500 peer-checked:bg-orange-500/10 peer-checked:text-orange-400">
+                    {item.label}
                   </div>
                 </label>
-
-                <label className="cursor-pointer">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="foodpartner"
-                    checked={role === 'foodpartner'}
-                    onChange={(e) => setRole(e.target.value)}
-                    className="peer sr-only"
-                  />
-
-                  <div className="rounded-lg border border-[var(--border)] px-3 py-2.5 text-center text-sm transition peer-checked:border-[var(--primary)] peer-checked:bg-[var(--primary)] peer-checked:text-[var(--primary-foreground)]">
-                    Food Partner
-                  </div>
-                </label>
-              </div>
+              ))}
             </div>
+          </div>
 
-            {role === 'foodpartner' && (
-              <div>
-                <label htmlFor="businessName" className="mb-1.5 block text-sm font-medium">
-                  Business Name
-                </label>
-
-                <input
-                  id="businessName"
-                  name="businessName"
-                  type="text"
-                  placeholder="Enter your business name"
-                  className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3.5 py-2.5 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
-                  required
-                />
-              </div>
-            )}
-
+          {role === 'foodpartner' && (
             <div>
-              <label htmlFor="fullname" className="mb-1.5 block text-sm font-medium">
-                Full Name
+              <label htmlFor="businessName" className={labelClass}>
+                Business Name
               </label>
-
               <input
-                id="fullname"
-                name="fullname"
-                type="text"
-                placeholder="Enter your full name"
-                className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3.5 py-2.5 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
+                id="businessName"
+                name="businessName"
+                placeholder="Enter business name"
+                className={inputClass}
                 required
               />
             </div>
+          )}
 
-            {role === 'foodpartner' && (
-              <div>
-                <label htmlFor="phone" className="mb-1.5 block text-sm font-medium">
-                  Phone Number
-                </label>
+          <div>
+            <label htmlFor="fullname" className={labelClass}>
+              Full Name
+            </label>
+            <input
+              id="fullname"
+              name="fullname"
+              placeholder="Enter your full name"
+              className={inputClass}
+              required
+            />
+          </div>
 
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3.5 py-2.5 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
-                  required
-                />
-              </div>
-            )}
-
+          {role === 'foodpartner' && (
             <div>
-              <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
-                Email
+              <label htmlFor="phone" className={labelClass}>
+                Phone Number
               </label>
-
               <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3.5 py-2.5 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="Enter phone number"
+                className={inputClass}
                 required
               />
             </div>
+          )}
 
-            {role === 'foodpartner' && (
-              <div>
-                <label htmlFor="address" className="mb-1.5 block text-sm font-medium">
-                  Address
-                </label>
+          <div>
+            <label htmlFor="email" className={labelClass}>
+              Email Address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              className={inputClass}
+              required
+            />
+          </div>
 
-                <textarea
-                  id="address"
-                  name="address"
-                  rows="2"
-                  placeholder="Enter your address"
-                  className="w-full resize-none rounded-lg border border-[var(--border)] bg-transparent px-3.5 py-2.5 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
-                  required
-                />
-              </div>
-            )}
-
+          {role === 'foodpartner' && (
             <div>
-              <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
-                Password
+              <label htmlFor="address" className={labelClass}>
+                Address
               </label>
-
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Create a password"
-                className="w-full rounded-lg border border-[var(--border)] bg-transparent px-3.5 py-2.5 text-sm outline-none transition placeholder:opacity-50 focus:border-[var(--primary)]"
+              <textarea
+                id="address"
+                name="address"
+                rows={2}
+                placeholder="Enter your address"
+                className={`${inputClass} resize-none`}
                 required
               />
             </div>
+          )}
 
-            <button
-              type="submit"
-              className="w-full rounded-lg bg-[var(--primary)] px-4 py-2.5 text-sm font-medium text-[var(--primary-foreground)] transition hover:opacity-90"
-            >
-              Create Account
-            </button>
+          <div>
+            <label htmlFor="password" className={labelClass}>
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Create a password"
+              autoComplete="new-password"
+              className={inputClass}
+              required
+            />
+          </div>
 
-          </form>
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-orange-500 py-3.5 text-sm font-semibold transition hover:bg-orange-600 active:scale-[0.99]"
+          >
+            Create Account →
+          </button>
+        </form>
 
-          <p className="mt-4 text-center text-sm opacity-70">
-            Already have an account?{' '}
-            <Link
-              to="/login"
-              className="font-medium text-[var(--foreground)] underline underline-offset-4 hover:opacity-70"
-            >
-              Login
-            </Link>
-          </p>
-        </div>
-      </div>
+        <p className="mt-6 text-center text-sm text-zinc-400">
+          Already have an account?{' '}
+          <Link
+            to="/login"
+            className="font-semibold text-orange-500 transition hover:text-orange-400"
+          >
+            Login
+          </Link>
+        </p>
+      </main>
     </div>
   )
 }
