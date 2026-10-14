@@ -41,7 +41,7 @@ const getFoodPartnerById = async (req, res) => {
   try {
     const { id } = req.params
 
-    const foodPartner = await userModel.findById(id).select('-password')
+    const foodPartner = await userModel.findOne({ _id: id, role: 'foodpartner' }).select('-password')
 
     if (!foodPartner) {
       return res.status(404).json({
