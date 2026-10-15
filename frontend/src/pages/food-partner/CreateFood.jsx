@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import api from '../../services/api'
 
 const CreateFood = () => {
   const navigate = useNavigate()
@@ -73,11 +74,7 @@ const CreateFood = () => {
     try {
       setLoading(true)
 
-      const response = await axios.post(
-        'http://localhost:3000/api/food/',
-        formData,
-        { withCredentials: true }
-      )
+      const response = await api.post('/api/food/', formData)
 
       if (response.data?.success === false) {
         throw new Error(
@@ -98,6 +95,8 @@ const CreateFood = () => {
         if (userId) navigate(`/food-partner/${userId}`)
       }, 1000)
     } catch (err) {
+      console.error('Error creating food reel:', err)
+
       setError(
         err.response?.data?.message ||
           err.message ||
@@ -193,7 +192,7 @@ const CreateFood = () => {
                   htmlFor="food-video"
                   className="flex h-full w-full cursor-pointer flex-col items-center justify-center px-5 py-8 text-center"
                 >
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-orange-500/20 bg-orange-500/10 text-orange-500 transition group-hover:bg-orange-500/20">
+                  <div className="group mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-orange-500/20 bg-orange-500/10 text-orange-500 transition hover:bg-orange-500/20">
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"

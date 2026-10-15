@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
@@ -7,9 +7,11 @@ import { useAuth } from '../../context/AuthContext'
 const Login = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
 
     const email = e.target.email.value
     const password = e.target.password.value
@@ -26,7 +28,12 @@ const Login = () => {
       if (role === 'client') navigate('/')
       else if (role === 'foodpartner') navigate('/create-food')
     } catch (err) {
-      console.log(err.response?.data || err)
+      console.error('Login error:', err)
+
+      setError(
+        err.response?.data?.message ||
+        'Login failed. Please try again.'
+      )
     }
   }
 
@@ -79,6 +86,15 @@ const Login = () => {
               className="w-full rounded-xl border border-white/10 bg-zinc-900 px-4 py-3.5 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
             />
           </div>
+
+          {error && (
+            <p
+              role="alert"
+              className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400"
+            >
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"

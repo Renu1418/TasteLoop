@@ -18,7 +18,7 @@ const Home = () => {
 
         setFoodVideos(response.data.foodItems || [])
       } catch (err) {
-        console.log(err.response?.data || err)
+        console.error('Error fetching food items:', err)
       }
     }
 
@@ -36,7 +36,7 @@ const Home = () => {
         setLikedFoods(likesResponse.data.likedFoods || [])
         setSavedFoods(savesResponse.data.savedFoods || [])
       } catch (err) {
-        console.log(err.response?.data || err)
+        console.error('Error fetching likes and saves:', err)
       }
     }
 
@@ -86,7 +86,7 @@ const Home = () => {
         )
       )
     } catch (err) {
-      console.log(err.response?.data || err)
+      console.error('Error updating like:', err)
       showNotice(err.response?.data?.message || 'Could not update like.')
     } finally {
       setLoadingActions((prev) => ({
@@ -120,7 +120,7 @@ const Home = () => {
 
       showNotice(wasSaved ? 'Removed from saved' : 'Food saved')
     } catch (err) {
-      console.log(err.response?.data || err)
+      console.error('Error saving food:', err)
       showNotice(err.response?.data?.message || 'Could not save food.')
     } finally {
       setLoadingActions((prev) => ({

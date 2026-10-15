@@ -8,9 +8,11 @@ const Register = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
   const [role, setRole] = useState('client')
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
 
     const fullname = e.target.fullname.value
     const email = e.target.email.value
@@ -35,7 +37,12 @@ const Register = () => {
       if (role === 'client') navigate('/')
       else navigate('/create-food')
     } catch (err) {
-      console.log(err.response?.data || err)
+      console.error('Registration error:', err)
+
+      setError(
+        err.response?.data?.message ||
+        'Registration failed. Please try again.'
+      )
     }
   }
 
@@ -177,6 +184,15 @@ const Register = () => {
               required
             />
           </div>
+
+          {error && (
+            <p
+              role="alert"
+              className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400"
+            >
+              {error}
+            </p>
+          )}
 
           <button
             type="submit"
