@@ -6,23 +6,47 @@ import likeModel from '../models/likes.model.js'
 import saveModel from '../models/save.model.js'
 
 
-const createFood = async (req,res)=>{
+const createFood = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please upload a video.'
+      })
+    }
 
-  const uploadFileResponse = await uploadFile(req.file.buffer, uuid());
-  
-  const foodItem = await foodModel.create({
-     name:req.body.name,
-     video:uploadFileResponse.url,
-     description:req.body.description,
-     foodPartner:req.user._id
-  });
+    const fileExtension = req.file.originalname.split('.').pop()
+    const fileName = `${uuid()}.${fileExtension}`
 
-  return res.status(201).send({
-    success:true,
-    message:"Food Item created successfully",
-    food:foodItem
-  });
+    const uploadFileResponse = await uploadFile(
+      req.file.buffer,
+      fileName
+    )
 
+    if (!uploadFileResponse?.url) {
+      throw new Error('ImageKit did not return a video URL.')
+    }
+
+    const foodItem = await foodModel.create({
+      name: req.body.name,
+      video: uploadFileResponse.url,
+      description: req.body.description,
+      foodPartner: req.user._id
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'Food Item created successfully',
+      food: foodItem
+    })
+  } catch (err) {
+    console.error('Create food error:', err)
+
+    return res.status(500).json({
+      success: false,
+      message: err.message || 'Failed to upload food video.'
+    })
+  }
 }
 
 const getFoodItems = async (req,res)=>{

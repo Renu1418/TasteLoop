@@ -1,15 +1,26 @@
-import {BrowserRouter as Router,Routes,Route,Navigate} from 'react-router-dom'
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom'
+
 import { useAuth } from '../context/AuthContext'
 import ProtectedRoute from '../components/ProtectedRoute'
+
 import Register from '../pages/auth/Register'
 import Login from '../pages/auth/Login'
+
 import Dashboard from '../pages/client/Dashboard'
 import Home from '../pages/client/Home'
 import Saved from '../pages/client/Saved'
 import Liked from '../pages/client/Liked'
 import ClientProfile from '../pages/client/ClientProfile'
+
 import CreateFood from '../pages/food-partner/CreateFood'
 import Profile from '../pages/food-partner/Profile'
+
 import DashboardLayout from '../components/DashboardLayout'
 import FoodPartnerLayout from '../components/FoodPartnerLayout'
 
@@ -29,9 +40,16 @@ const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={user ? <Navigate to={home} replace /> : <Login />} />
-        <Route path="/register" element={user ? <Navigate to={home} replace /> : <Register />}/>
+        {/* Authentication routes */}
+        <Route
+          path="/login"
+          element={user ? <Navigate to={home} replace /> : <Login />}
+        />
+
+        <Route
+          path="/register"
+          element={user ? <Navigate to={home} replace /> : <Register />}
+        />
 
         {/* Client routes */}
         <Route element={<ProtectedRoute role="client" />}>
@@ -44,12 +62,16 @@ const AppRoutes = () => {
           </Route>
         </Route>
 
-        {/* Food Partner routes */}
+        {/* Food partner-only routes */}
         <Route element={<ProtectedRoute role="foodpartner" />}>
           <Route element={<FoodPartnerLayout />}>
             <Route path="/create-food" element={<CreateFood />} />
-            <Route path="/food-partner/:id" element={<Profile />} />
           </Route>
+        </Route>
+
+        {/* Food partner profile: clients and food partners */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/food-partner/:id" element={<Profile />} />
         </Route>
 
         {/* Unknown routes */}

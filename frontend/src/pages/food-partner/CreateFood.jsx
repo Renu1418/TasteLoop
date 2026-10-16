@@ -127,7 +127,7 @@ const CreateFood = () => {
             </p>
           </div>
 
-          <div className="hidden shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 sm:flex">
+          <div className="hidden shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/3 px-3 py-2 sm:flex">
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-orange-500/10 text-orange-500">
               <svg
                 viewBox="0 0 24 24"
@@ -169,14 +169,14 @@ const CreateFood = () => {
               </span>
             </div>
 
-            <div className="relative flex min-h-[230px] flex-1 items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/15 bg-[#080808] lg:min-h-0">
+            <div className="relative flex min-h-57.5 flex-1 items-center justify-center overflow-hidden rounded-xl border border-dashed border-white/15 bg-[#080808] lg:min-h-0">
               {preview ? (
                 <>
                   <video
                     src={preview}
                     controls
                     playsInline
-                    className="h-full max-h-[430px] w-full object-contain"
+                    className="h-full max-h-107.5 w-full object-contain"
                   />
 
                   <button
@@ -212,7 +212,7 @@ const CreateFood = () => {
                     Drop your food video here
                   </span>
 
-                  <span className="mt-2 max-w-[240px] text-xs leading-5 text-zinc-500">
+                  <span className="mt-2 max-w-60 text-xs leading-5 text-zinc-500">
                     Choose a video from your device to preview it before publishing.
                   </span>
 
@@ -232,7 +232,7 @@ const CreateFood = () => {
             </div>
 
             {video ? (
-              <div className="mt-3 flex min-w-0 items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3">
+              <div className="mt-3 flex min-w-0 items-center gap-3 rounded-xl border border-white/10 bg-white/3 p-3">
                 <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-orange-500/10 text-orange-500">
                   <svg
                     viewBox="0 0 24 24"
